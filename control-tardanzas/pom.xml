@@ -134,9 +134,6 @@
                                 <internalName>control-tardanzas</internalName>
                                 <originalFilename>CONTROL-RETRASO.exe</originalFilename>
                             </versionInfo>
-                            <messages>
-                                <jreNotFound>Este programa necesita Java 17 o superior. Por favor, instala Java desde https://adoptium.net/</jreNotFound>
-                            </messages>
                         </configuration>
                     </execution>
                 </executions>
