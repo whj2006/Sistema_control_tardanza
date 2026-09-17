@@ -113,7 +113,6 @@
                             <downloadUrl>https://adoptium.net/</downloadUrl>
                             <classPath>
                                 <mainClass>com.instituto.tardanzas.Main</mainClass>
-                                <preCp>anything</preCp>
                             </classPath>
                             <!-- Icono opcional, si existe -->
                             <icon>${project.basedir}/src/main/resources/images/icon.ico</icon>
