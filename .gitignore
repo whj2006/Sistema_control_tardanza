@@ -1,0 +1,37 @@
+# Maven
+target/
+*.class
+
+# JARs / EXEs generados (no subir al repo, usar Releases)
+*.jar
+*.exe
+*.msi
+*.dmg
+
+# Excepto wrappers si se quieren? No, ignoramos todo
+!src/**/*.jar
+
+# Config local (contiene passwords)
+config.properties
+
+# IDE
+.idea/
+*.iml
+.settings/
+.classpath
+.project
+.factorypath
+.springBeans
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Installer output
+control-tardanzas/target/dist/
+control-tardanzas/target/installer/

@@ -1,0 +1,60 @@
+name: Build JAR y EXE
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Build con Maven (JAR + EXE)
+        working-directory: ./control-tardanzas
+        run: mvn clean package
+
+      - name: Listar artefactos
+        run: |
+          dir control-tardanzas\target
+        shell: cmd
+
+      - name: Subir JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: jar-ejecutable
+          path: |
+            control-tardanzas/target/*-jar-with-dependencies.jar
+            CONTROL RETRASO.jar
+
+      - name: Subir EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: exe-windows
+          path: control-tardanzas/target/CONTROL-RETRASO.exe
+          if-no-files-found: warn
+
+      - name: Crear Release (solo si es tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            control-tardanzas/target/CONTROL-RETRASO.exe
+            control-tardanzas/target/*-jar-with-dependencies.jar
+            CONTROL RETRASO.jar
+            Manual_ControlRetraso.docx.pdf
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
