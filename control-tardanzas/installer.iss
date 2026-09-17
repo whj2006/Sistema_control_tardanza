@@ -16,17 +16,26 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={autopf}\{#MyAppName}
+; INSTALACION SIN ADMIN - NO PIDE CONTRASEÑA DE ADMINISTRADOR
+PrivilegesRequired=lowest
+PrivilegesRequiredOverridesAllowed=dialog
+DefaultDirName={localappdata}\Programs\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 LicenseFile=..\README.md
 OutputDir=target\installer
-OutputBaseFilename=ControlRetraso-Setup-{#MyAppVersion}
+OutputBaseFilename=ControlRetraso-Setup-{#MyAppVersion}-Portable
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
 SetupIconFile=src\main\resources\images\icon.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
+; No crear entrada que requiera admin
+Uninstallable=yes
+CreateUninstallRegKey=yes
+; Mensaje que no modifica sistema
+InfoBeforeFile=
+InfoAfterFile=
 
 [Languages]
 Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
@@ -36,11 +45,14 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
+; EXE portable - no requiere admin, se instala en %LOCALAPPDATA%\Programs
 Source: "target\CONTROL-RETRASO.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "target\control-tardanzas-1.0.0-jar-with-dependencies.jar"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Gestion_retraso_sql\sql_completo.sql"; DestDir: "{app}\sql"; Flags: ignoreversion
 Source: "..\Manual_ControlRetraso.docx.pdf"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\config.properties"; DestDir: "{app}"; Flags: ignoreversion; Permissions: users-modify
+; config.properties se crea al primer arranque, no se incluye para evitar sobreescribir
+; Si quieres incluir ejemplo:
+Source: "..\config.properties.example"; DestDir: "{app}"; DestName: "config.properties.example"; Flags: ignoreversion
 ; Si usas jpackage, cambia la Source a target\dist\*
 
 [Icons]

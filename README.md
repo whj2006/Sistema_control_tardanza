@@ -5,151 +5,149 @@ Aplicación de escritorio en **Java Swing** para registrar, gestionar y notifica
 > **Centro:** IES José Ballester Gozalvo  
 > **Stack:** Java 17 · Maven · Swing · MariaDB · HikariCP · Jakarta Mail · Apache POI
 
-## ⬇️ Descarga Directa
+## ⬇️ Descarga Directa — 1 Clic (Portable, sin instalador, sin admin)
 
-> **Última versión: v1.0.0 — Los JARs/EXEs ya no están en el repo, se generan vía Maven o se descargan desde Releases**
-
-<p align="center">
-
-[![GitHub Releases](https://img.shields.io/badge/Descargar%20desde-Releases%20Oficiales-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/whj2006/Sistema_control_tardanza/releases)
-[![Descargar JAR](https://img.shields.io/badge/JAR-Fat%20Jar%20con%20dependencias-0078D6?style=for-the-badge&logo=java&logoColor=white)](https://github.com/whj2006/Sistema_control_tardanza/releases/latest)
-[![Descargar EXE](https://img.shields.io/badge/EXE-Windows%20Launch4j-00A4EF?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/whj2006/Sistema_control_tardanza/releases/latest)
-[![Manual PDF](https://img.shields.io/badge/Manual-PDF-red?style=for-the-badge&logo=adobeacrobatreader&logoColor=white)](./Manual_ControlRetraso.docx.pdf)
-
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Requiere-Java%2017+-orange?style=flat-square" alt="Java 17">
-  <img src="https://img.shields.io/badge/Plataforma-Windows%20%7C%20Linux%20%7C%20Mac-lightgrey?style=flat-square" alt="Plataforma">
-  <img src="https://img.shields.io/badge/Maven-3.8+-blue?style=flat-square&logo=apachemaven" alt="Maven">
-  <img src="https://img.shields.io/badge/Build-GitHub%20Actions-black?style=flat-square&logo=githubactions" alt="Actions">
-</p>
-
-### Cómo obtener el ejecutable
-
-**Opción A - Desde Releases (recomendado, sin compilar):**
-1. Ve a [Releases](https://github.com/whj2006/Sistema_control_tardanza/releases)
-2. Descarga `CONTROL-RETRASO.exe` o `control-tardanzas-1.0.0-jar-with-dependencies.jar`
-3. Ejecuta:
-```bash
-java -jar control-tardanzas-1.0.0-jar-with-dependencies.jar
-# o doble clic en CONTROL-RETRASO.exe si tienes Java 17+
-```
-
-**Opción B - Compilar tú mismo:**
-```bash
-cd control-tardanzas
-mvn clean package
-# Genera target/CONTROL-RETRASO.exe y target/*-jar-with-dependencies.jar
-```
-
-> **¿No tienes Java?** Instálalo desde [Adoptium Temurin 17](https://adoptium.net/temurin/releases/?version=17) y luego ejecuta el JAR o el EXE.
-
-> **Nota:** `*.jar`, `*.exe` y `target/` están en `.gitignore` y ya no se suben al repositorio. Usa `mvn package` o descarga desde Releases. El workflow de GitHub Actions genera ambos artefactos automáticamente en cada push a `main` y en cada tag `v*`.
-
----
-
-## 🖥️ Opción .EXE — Windows (¡NUEVO!)
-
-> **Sí, ahora el proyecto Maven genera un `.exe` nativo de Windows listo para doble clic.**
+> **Última versión: v1.0.0 — Portable, no pide contraseña de administrador, no modifica el sistema**
 
 <p align="center">
 
-<a href="https://github.com/whj2006/Sistema_control_tardanza/releases/latest">
-<img src="https://img.shields.io/badge/EXE%20Windows-DESCARGAR%20CONTROL--RETRASO.exe-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Descargar EXE">
+<!-- BOTONES DE DESCARGA DIRECTA - Al hacer clic descarga directamente el archivo -->
+<a href="https://github.com/whj2006/Sistema_control_tardanza/releases/latest/download/CONTROL-RETRASO.exe">
+<img src="https://img.shields.io/badge/EXE%20Windows%20Portable-DESCARGA%20DIRECTA-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Descargar EXE Directo">
+</a>
+<a href="https://github.com/whj2006/Sistema_control_tardanza/releases/latest/download/control-tardanzas-1.0.0-jar-with-dependencies.jar">
+<img src="https://img.shields.io/badge/JAR%20Ejecutable-DESCARGA%20DIRECTA-2ea44f?style=for-the-badge&logo=java&logoColor=white" alt="Descargar JAR Directo">
+</a>
+
+<br>
+
+<a href="https://github.com/whj2006/Sistema_control_tardanza/releases">
+<img src="https://img.shields.io/badge/Ver%20todas%20las%20versiones-Releases-black?style=for-the-badge&logo=github" alt="Releases">
+</a>
+<a href="./Manual_ControlRetraso.docx.pdf">
+<img src="https://img.shields.io/badge/Manual-PDF-red?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="Manual">
 </a>
 
 </p>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Portable-Sin%20instalador%20sin%20admin-brightgreen?style=flat-square" alt="Portable">
+  <img src="https://img.shields.io/badge/Requiere-Java%2017+-orange?style=flat-square" alt="Java 17">
+  <img src="https://img.shields.io/badge/Plataforma-Windows%20%7C%20Linux%20%7C%20Mac-lightgrey?style=flat-square" alt="Plataforma">
+  <img src="https://img.shields.io/badge/UAC-No%20pide%20contraseña-blue?style=flat-square" alt="No UAC">
+</p>
+
+### 🚀 Ejecución en 10 segundos (sin instalar nada)
+
+```bash
+# 1. Descarga el EXE (botón azul de arriba)
+# 2. Doble clic en CONTROL-RETRASO.exe
+# ¡Listo! No pide admin, no instala, no modifica el sistema
+```
+
+> **¿Por qué no pide contraseña de administrador?**
+> - El `CONTROL-RETRASO.exe` es **portable**: es solo un wrapper del JAR con Launch4j, tipo `gui`, sin manifiesto de admin
+> - No escribe en `C:\Program Files`, solo crea `config.properties` **junto al EXE** (en Descargas, Escritorio, etc.)
+> - No toca registro de Windows ni carpetas del sistema
+> - El instalador opcional (`installer.iss`) también está configurado con `PrivilegesRequired=lowest` → se instala en `%LOCALAPPDATA%\Programs` sin UAC
+
+> **¿No tienes Java?** Instala [Adoptium Temurin 17](https://adoptium.net/temurin/releases/?version=17) (sin admin, opción portable disponible) y luego ejecuta el EXE.
+
+### 📥 Si los botones dan 404 (aún no hay Release)
+
+Los botones de descarga directa funcionan cuando hay un Release publicado con assets. Si aún no has publicado uno:
+
+**Opción 1 - GitHub Actions (artefactos temporales):**
+1. Ve a [Actions → último build verde](https://github.com/whj2006/Sistema_control_tardanza/actions/workflows/build.yml)
+2. Baja hasta Artifacts → descarga `exe-windows` y `jar-ejecutable`
+
+**Opción 2 - Compilar tú mismo (2 comandos):**
+```bash
+cd control-tardanzas
+mvn clean package
+# Genera:
+# target/CONTROL-RETRASO.exe (portable, sin admin)
+# target/control-tardanzas-1.0.0-jar-with-dependencies.jar
+```
+
+> **Nota:** `*.jar`, `*.exe` y `target/` están en `.gitignore` y no se suben al repo. Usa `mvn package` o Releases.
+
+---
+
+## 🖥️ Opción .EXE — Detalles Técnicos (Portable, sin admin)
+
+> **Sí, el proyecto Maven genera un `.exe` nativo portable que NO pide contraseña de administrador.**
+
+<p align="center">
+<a href="https://github.com/whj2006/Sistema_control_tardanza/releases/latest/download/CONTROL-RETRASO.exe">
+<img src="https://img.shields.io/badge/EXE%20Portable-DESCARGA%20DIRECTA%20SIN%20ADMIN-00A4EF?style=for-the-badge&logo=windows&logoColor=white" alt="EXE Portable">
+</a>
+</p>
+
 ### ¿Qué es el .EXE?
 
-- Es un **wrapper del JAR con Launch4j**: `CONTROL-RETRASO.exe` (≈ 25MB)
-- **No necesitas consola**: tipo `gui`, doble clic y abre la app
-- **Con icono** del instituto (`icon.ico` generado desde `logo1.png`)
-- **Comprueba Java 17+**: si no tienes Java, te muestra un mensaje con link a [Adoptium](https://adoptium.net/)
-- **Mismo JAR por dentro**: toda la lógica de tardanzas, correos, etc.
+- **Wrapper del JAR con Launch4j**: `CONTROL-RETRASO.exe` (~25MB)
+- **Portable 100%**: no instala, no pide admin/UAC, no escribe en Program Files ni registro
+- **Sin consola**: tipo `gui`, doble clic y abre la app
+- **Con icono** del instituto (`icon.ico`)
+- **Comprueba Java 17+**: si no tienes Java, muestra mensaje con link a Adoptium (sin UAC)
+- **Mismo JAR por dentro**: toda la lógica de tardanzas, correos, BD, etc.
 
-### 3 formas de obtener el .EXE
+### 3 formas de obtener el .EXE (todas sin admin)
 
-#### 1️⃣ Descargar desde Releases (más fácil, 1 clic)
+#### 1️⃣ Descarga directa (1 clic, sin admin)
 ```
-1. Ve a https://github.com/whj2006/Sistema_control_tardanza/releases/latest
-2. Descarga CONTROL-RETRASO.exe
-3. Doble clic (requiere Java 17 instalado)
+1. Clic en botón azul de arriba → descarga CONTROL-RETRASO.exe
+2. Guárdalo en Escritorio o Descargas (no en Program Files para evitar admin)
+3. Doble clic → si es primera vez pide datos de BD y crea config.properties junto al EXE
+4. ¡No pide contraseña de Windows!
 ```
 
-#### 2️⃣ Compilar en tu PC Windows (2 comandos)
+#### 2️⃣ Compilar en tu PC (sin admin)
 ```bat
 cd control-tardanzas
 mvn clean package
-:: Genera:
-:: target/CONTROL-RETRASO.exe
-:: target/control-tardanzas-1.0.0-jar-with-dependencies.jar
+:: Genera target/CONTROL-RETRASO.exe (portable, sin admin)
 ```
-O usa el script:
+Script rápido:
 ```bat
-:: En la raíz del repo:
-generar-exe.bat
-:: o
-control-tardanzasuild-exe.bat
+generar-exe.bat  :: desde raíz, doble clic
 ```
 
-#### 3️⃣ GitHub Actions lo genera solo
-Cada push a `main` o tag `v*` ejecuta el workflow `.github/workflows/build.yml` en `windows-latest` y sube el EXE como artefacto. Si creas un Release con tag, el EXE se adjunta automáticamente.
+#### 3️⃣ GitHub Actions (sin compilar local, sin admin)
+Cada push genera el EXE en `windows-latest` sin necesidad de admin. Descárgalo de Actions → Artifacts.
 
-### Requisitos del .EXE
+### ⚙️ ¿Se puede configurar la base de datos en el .EXE? ¡Sí!
 
-| Requisito | Detalle |
-|---|---|
-| **SO** | Windows 10/11 (64 bits) |
-| **Java** | Java 17+ JRE/JDK instalado (Temurin recomendado) |
-| **RAM** | 128MB inicial, 1024MB máx (configurable en pom.xml) |
-| **BD** | MariaDB/MySQL accesible (misma que JAR) |
+**El .EXE se configura exactamente igual que el JAR:**
 
-### ⚙️ ¿Se puede configurar la base de datos en el .EXE?
+1. **Primera ejecución:**
+   - Busca `config.properties` en carpeta del EXE + working dir
+   - Si no existe, abre `VentanaConfigDB` para pedir Host, Puerto, BD, Usuario, Pass
+   - Prueba conexión y guarda `config.properties` junto al EXE (sin admin si EXE está en Escritorio/Descargas)
 
-**¡Sí, 100%! El .EXE es exactamente el mismo JAR pero empaquetado.** Se configura igual:
+2. **SMTP y horarios:** Desde la UI, paneles `Config. SMTP` y `Ajustes` → guardan en BD (`configuracion`, `configuracion_horarios`)
 
-1. **Primera ejecución del EXE:**
-   - Busca `config.properties` en:
-     - Carpeta donde está el `CONTROL-RETRASO.exe`
-     - Directorio de trabajo actual
-   - Si no lo encuentra, **abre automáticamente `VentanaConfigDB`** (ventana gráfica) para pedir:
-     - Host (ej: `localhost`)
-     - Puerto (ej: `3306`)
-     - Nombre BD (ej: `control_tardanzas`)
-     - Usuario y contraseña
-   - Prueba la conexión con `DriverManager` y si es OK, guarda `config.properties` **junto al EXE** y en working dir
+3. **¿Dónde queda config.properties?**
+   ```
+   Escritorio\CONTROL-RETRASO.exe
+   Escritorio\config.properties  ← se crea aquí, sin admin
+   ```
 
-2. **Configuración SMTP y horarios:**
-   - Una vez conectado a la BD, toda la configuración extra está en la BD, no en archivos:
-     - **SMTP:** Panel `Config. SMTP` → guarda en tabla `configuracion` (host, puerto, usuario, pass en VARBINARY, remitente). Botón "Probar conexión"
-     - **Hora entrada:** Panel `Ajustes` → tabla `configuracion_horarios` (ej: `08:00`)
-   - Así que el EXE configura todo desde la UI, igual que el JAR
+> **Importante para evitar UAC:** No pongas el EXE en `C:\Program Files`, ponlo en Escritorio, Descargas o Documentos. Así no necesita permisos de administrador para crear `config.properties`.
 
-3. **¿Dónde queda `config.properties`?**
-   - Junto al EXE: `C:\Programas\ControlRetraso\config.properties` (si instalas con Inno Setup)
-   - O en la misma carpeta si lo descargas suelto
-   - Ejemplo de contenido:
-     ```properties
-     db.host=localhost
-     db.puerto=3306
-     db.nombre=control_tardanzas
-     db.user=root
-     db.password=
-     db.url=jdbc\:mariadb\://localhost\:3306/control_tardanzas?useUnicode\=true&characterEncoding\=UTF-8&serverTimezone\=Europe/Madrid
-     ```
-   - Puedes editarlo a mano o borrarlo para que vuelva a pedir datos
+### 🛡️ Comparativa: Portable EXE vs Instalador
 
-4. **Mejora incluida para EXE:**
-   - `ConfigDB.java` ahora busca el archivo en **dos sitios**: working dir + directorio del JAR/EXE (via `getProtectionDomain().getCodeSource().getLocation()`)
-   - Al guardar, lo guarda en **ambos sitios** para asegurar que el EXE siempre lo encuentre, incluso si se lanza desde acceso directo
+| Característica | `CONTROL-RETRASO.exe` (Portable) | `ControlRetraso-Setup-*.exe` (Instalador) |
+|---|---|---|
+| **Pide admin/UAC** | ❌ No | ❌ No (ahora con `PrivilegesRequired=lowest`) |
+| **Instala en sistema** | ❌ No, solo 1 archivo | ✅ Sí, en `%LOCALAPPDATA%\Programs` |
+| **Modifica registro** | ❌ No | ✅ Solo desinstalador |
+| **Ubicación** | Donde lo descargues | `%LOCALAPPDATA%\Programs\Control de Retraso` |
+| **config.properties** | Junto al EXE | Junto al EXE en AppData |
+| **Recomendado para** | Profesores, uso rápido | Instalación permanente sin admin |
 
-> **En resumen:** El EXE se configura exactamente igual que el JAR. No pierdes ninguna funcionalidad.
-
-> **¿Quieres un EXE que NO necesite Java?** Usa `mvn package -Pinstaller` (jpackage) o compila `installer.iss` con Inno Setup → genera instalador con JRE embebido.
-
-
+> **Si no quieres que cambie nada en el ordenador, usa el EXE portable.**
 
 ---
 
@@ -464,90 +462,87 @@ Al arrancar:
 
 ---
 
-## 📦 Compilación — JAR y EXE
+## 📦 Compilación — JAR y EXE (Portable, sin admin)
 
-### Opción 1: JAR ejecutable (multiplataforma)
+### Opción 1: JAR ejecutable (multiplataforma, sin admin)
 ```bash
 cd control-tardanzas
 mvn clean package -DskipTests
 java -jar target/control-tardanzas-1.0.0-jar-with-dependencies.jar
+# No pide admin, crea config.properties junto al JAR
 ```
-El plugin `maven-antrun-plugin` copia automáticamente el JAR a `../CONTROL RETRASO.jar`.
 
-### Opción 2: EXE Windows con Launch4j (recomendado)
+### Opción 2: EXE Windows Portable con Launch4j (recomendado, sin admin, sin UAC)
 
-Sí, este es un proyecto **Maven** y se puede convertir a `.exe`. Ya está configurado en el `pom.xml` con `launch4j-maven-plugin`.
+**Ya está configurado en `pom.xml` con `launch4j-maven-plugin` 2.5.2 (build verificado en CI).**
 
 **Requisitos en Windows:**
-- JDK 17+ instalado
+- JDK 17+ instalado (sin necesidad de admin si usas portable de Adoptium)
 - Maven 3.8+ en PATH
-- `src/main/resources/images/icon.ico` (ya generado desde logo1.png)
+- `src/main/resources/images/icon.ico` (ya incluido)
 
-**Compilar:**
+**Compilar (sin admin):**
 
 ```bat
-REM En Windows, doble clic o desde cmd:
+REM Doble clic:
+generar-exe.bat
+:: o
 cd control-tardanzas
 build-exe.bat
 
-REM O manual:
+REM Manual:
 mvn clean package
-REM Genera:
-REM target/CONTROL-RETRASO.exe  (wrapper del fat jar, necesita Java 17 instalado)
-REM target/control-tardanzas-1.0.0-jar-with-dependencies.jar
+:: Genera target/CONTROL-RETRASO.exe (portable, 25MB, sin admin, sin UAC)
 ```
 
-**Qué hace Launch4j:**
-- Empaqueta el fat jar en un `CONTROL-RETRASO.exe` con icono, versión y metadata
-- Tipo `gui` (no abre consola)
-- Comprueba Java 17+ y muestra mensaje con link a Adoptium si no está instalado
-- Heap: 128MB inicial, 1024MB máximo
+**Qué hace Launch4j (config final que pasa CI):**
+- Empaqueta fat jar en `CONTROL-RETRASO.exe` con icono y versión
+- `headerType=gui` (no abre consola negra)
+- `downloadUrl=https://adoptium.net/` (si no hay Java, abre web)
+- `jre minVersion=17, preferJre, heap 128-1024MB`
+- `versionInfo` con fileVersion, productName, etc. (sin <messages> que rompía el build)
+- **Sin <preCp> y sin <messages>**: esos dos campos causaban fallo en plugin 2.5.2
+- **Sin manifiesto de admin**: NO pide UAC/contraseña
 
-> El EXE **NO incluye JRE**, requiere Java instalado. Para un instalador con JRE embebido usa la Opción 3.
+> **Portable = No pide admin:** Guarda `config.properties` junto al EXE. Pon el EXE en Escritorio/Descargas, no en Program Files.
 
-### Opción 3: Instalador nativo con JRE embebido (jpackage)
+### Opción 3: Instalador nativo con JRE embebido (jpackage, sin admin)
 
-Genera un instalador `.exe` / `.msi` que incluye el runtime Java, no necesita Java previo.
-
-**Solo funciona en Windows con JDK 17:**
+Genera instalador `.exe` que incluye Java, no necesita Java previo. Ahora sin UAC:
 
 ```bash
-# En Windows:
+# Solo Windows con JDK 17:
 mvn clean package -Pinstaller
-# Genera en target/dist/ el instalador nativo
-
-# O con jpackage directo:
-jpackage --name "ControlRetraso" \
-  --input target/ \
-  --main-jar control-tardanzas-1.0.0-jar-with-dependencies.jar \
-  --main-class com.instituto.tardanzas.Main \
-  --type exe \
-  --icon src/main/resources/images/icon.ico \
-  --vendor "IES Jose Ballester Gozalvo" \
-  --app-version 1.0.0 \
-  --win-dir-chooser --win-menu --win-shortcut
+# Genera target/dist/ControlRetraso-1.0.0.exe (con JRE embebido, sin admin)
 ```
 
-### Opción 4: Instalador con Inno Setup (instalador profesional)
+### Opción 4: Instalador Inno Setup (ahora sin admin)
 
-1. Compila el EXE con `mvn package`
-2. Instala [Inno Setup 6](https://jrsoftware.org/isinfo.php)
-3. Abre `control-tardanzas/installer.iss` y compila
-4. Obtienes `target/installer/ControlRetraso-Setup-1.0.0.exe` con asistente, icono en escritorio, desinstalador, etc.
+Actualizado para **NO pedir contraseña de administrador**:
+
+```ini
+PrivilegesRequired=lowest
+DefaultDirName={localappdata}\Programs\Control de Retraso
+```
+
+1. `mvn package` (genera EXE portable)
+2. Instala Inno Setup 6
+3. Abre `installer.iss` → Compila
+4. Obtienes `target/installer/ControlRetraso-Setup-1.0.0-Portable.exe` (instala en %LOCALAPPDATA% sin UAC)
 
 **Scripts incluidos:**
-- `control-tardanzas/build-exe.bat` → Build completo en Windows (JAR + EXE)
-- `control-tardanzas/build-exe.sh` → Build en Linux/Mac (JAR, EXE solo en Windows)
-- `control-tardanzas/installer.iss` → Script Inno Setup
+- `generar-exe.bat` (raíz) → genera EXE portable sin admin
+- `control-tardanzas/build-exe.bat` / `build-exe.sh`
+- `control-tardanzas/installer.iss` (ahora `PrivilegesRequired=lowest`, sin UAC)
 
-### Resumen de artefactos generados
+### Resumen de artefactos (todos sin admin si se usan en carpeta usuario)
 
-| Archivo | Descripción | Requiere Java |
-|---|---|---|
-| `CONTROL RETRASO.jar` | Fat jar, doble clic | Sí |
-| `target/CONTROL-RETRASO.exe` | EXE wrapper Launch4j | Sí (Java 17+) |
-| `target/dist/ControlRetraso-1.0.0.exe` | Instalador jpackage con JRE | No |
-| `target/installer/ControlRetraso-Setup-1.0.0.exe` | Instalador Inno Setup | Sí (o con JRE si usas jpackage) |
+| Archivo | Descripción | Pide admin/UAC | Requiere Java |
+|---|---|---|---|
+| `target/control-tardanzas-1.0.0-jar-with-dependencies.jar` | Fat JAR portable | ❌ No | Sí 17+ |
+| `target/CONTROL-RETRASO.exe` | EXE Launch4j portable | ❌ No | Sí 17+ |
+| `target/dist/ControlRetraso-1.0.0.exe` | Instalador jpackage con JRE | ❌ No | No |
+| `target/installer/ControlRetraso-Setup-*-Portable.exe` | Instalador Inno sin admin | ❌ No (lowest) | Sí 17+ |
 
 ---
 
