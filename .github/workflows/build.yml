@@ -35,9 +35,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jar-ejecutable
-          path: |
-            control-tardanzas/target/*-jar-with-dependencies.jar
-            CONTROL RETRASO.jar
+          path: control-tardanzas/target/*-jar-with-dependencies.jar
+          if-no-files-found: error
 
       - name: Subir EXE
         uses: actions/upload-artifact@v4
@@ -53,7 +52,6 @@ jobs:
           files: |
             control-tardanzas/target/CONTROL-RETRASO.exe
             control-tardanzas/target/*-jar-with-dependencies.jar
-            CONTROL RETRASO.jar
             Manual_ControlRetraso.docx.pdf
           generate_release_notes: true
         env:

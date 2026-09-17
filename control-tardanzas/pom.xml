@@ -140,28 +140,7 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- Copia el JAR final a la raiz como CONTROL RETRASO.jar para compatibilidad -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <id>copy-jar-to-root</id>
-                        <phase>package</phase>
-                        <goals><goal>run</goal></goals>
-                        <configuration>
-                            <target>
-                                <copy file="${project.build.directory}/${project.artifactId}-${project.version}-jar-with-dependencies.jar"
-                                      tofile="${project.basedir}/../CONTROL RETRASO.jar" overwrite="true"/>
-                                <echo message="JAR copiado a ../CONTROL RETRASO.jar"/>
-                            </target>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
+</plugins>
     </build>
 
     <profiles>
