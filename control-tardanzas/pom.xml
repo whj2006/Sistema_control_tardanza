@@ -114,26 +114,10 @@
                             <classPath>
                                 <mainClass>com.instituto.tardanzas.Main</mainClass>
                             </classPath>
+                            <icon>${project.basedir}/src/main/resources/images/icon.ico</icon>
                             <jre>
                                 <minVersion>17</minVersion>
-                                <jdkPreference>preferJre</jdkPreference>
-                                <initialHeapSize>128</initialHeapSize>
-                                <maxHeapSize>1024</maxHeapSize>
                             </jre>
-                            <versionInfo>
-                                <fileVersion>1.0.0.0</fileVersion>
-                                <txtFileVersion>${project.version}</txtFileVersion>
-                                <fileDescription>Control de Tardanzas - IES Jose Ballester Gozalvo</fileDescription>
-                                <copyright>IES Jose Ballester Gozalvo</copyright>
-                                <productName>Control de Retraso</productName>
-                                <productVersion>1.0.0.0</productVersion>
-                                <txtProductVersion>1.0.0</txtProductVersion>
-                                <internalName>control-tardanzas</internalName>
-                                <originalFilename>CONTROL-RETRASO.exe</originalFilename>
-                            </versionInfo>
-                            <messages>
-                                <jreNotFound>Este programa necesita Java 17 o superior. Por favor, instala Java desde https://adoptium.net/</jreNotFound>
-                            </messages>
                         </configuration>
                     </execution>
                 </executions>
