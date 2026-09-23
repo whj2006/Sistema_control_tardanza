@@ -1,0 +1,8 @@
+# Ejemplo de configuración local de la base de datos.
+# La aplicación guarda la configuración real en el perfil del usuario.
+db.host=localhost
+db.puerto=3306
+db.nombre=control_tardanzas
+db.user=root
+db.password=
+db.url=jdbc:mariadb://localhost:3306/control_tardanzas?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Europe/Madrid

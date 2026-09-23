@@ -1,0 +1,30 @@
+# Maven / Java
+**/target/
+*.class
+*.jar
+
+# Ejecutables y paquetes generados
+*.exe
+*.msi
+*.app
+/dist/
+
+# Runtime y salidas de desarrollo
+/.build/
+*.log
+
+# Credenciales y configuración local
+config.properties
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+.project
+.classpath
+.settings/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+Desktop.ini
