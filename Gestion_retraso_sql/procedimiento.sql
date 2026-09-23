@@ -1,8 +1,33 @@
 -- ================================================
+-- PROCEDIMIENTOS (idempotentes)
+-- ================================================
+
+DELIMITER ;
+DROP PROCEDURE IF EXISTS sp_fichar_retraso_automatico;
+DROP PROCEDURE IF EXISTS sp_historial_por_alumno;
+DROP PROCEDURE IF EXISTS sp_importar_actualizar_alumno;
+DROP PROCEDURE IF EXISTS sp_crear_curso_si_no_existe;
+DROP PROCEDURE IF EXISTS sp_editar_alumno;
+DROP PROCEDURE IF EXISTS sp_editar_curso;
+DROP PROCEDURE IF EXISTS sp_listar_alumnos_curso;
+DROP PROCEDURE IF EXISTS sp_ver_estado_correos;
+DROP PROCEDURE IF EXISTS sp_guardar_configuracion;
+DROP PROCEDURE IF EXISTS sp_obtener_configuracion;
+DROP PROCEDURE IF EXISTS sp_autenticar_usuario;
+DROP PROCEDURE IF EXISTS sp_contar_usuarios;
+DROP PROCEDURE IF EXISTS sp_listar_usuarios;
+DROP PROCEDURE IF EXISTS sp_crear_usuario;
+DROP PROCEDURE IF EXISTS sp_editar_usuario;
+DROP PROCEDURE IF EXISTS sp_cambiar_password;
+DROP PROCEDURE IF EXISTS sp_resetear_password;
+DROP PROCEDURE IF EXISTS sp_eliminar_usuario;
+
+DELIMITER //
+
+-- ================================================
 -- PROCEDIMIENTOS
 -- ================================================
 
-DELIMITER //
 
 -- ── A. Fichar retraso automatico ─────────────────────────────────────────
 CREATE PROCEDURE sp_fichar_retraso_automatico(
