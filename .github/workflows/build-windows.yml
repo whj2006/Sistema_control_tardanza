@@ -1,0 +1,54 @@
+name: Build instalador Windows
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows-installer:
+    runs-on: windows-latest
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Preparar Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Instalar Inno Setup
+        shell: pwsh
+        run: choco install innosetup --no-progress -y
+
+      - name: Compilar, probar y generar el instalador
+        shell: pwsh
+        run: ./control-tardanzas/build-windows.ps1
+
+      - name: Guardar instalador como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: ControlTardanzas-Windows
+          path: dist/ControlTardanzas-Setup.exe
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publicar instalador en GitHub Releases
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Control de Tardanzas ${{ github.ref_name }}
+          generate_release_notes: true
+          files: dist/ControlTardanzas-Setup.exe
+          body: |
+            Instalador de Windows para Control de Tardanzas.
+
+            - Incluye el runtime de Java 17; no hace falta instalar Java aparte.
+            - En el primer inicio puede descargar MariaDB con winget y preparar automáticamente el esquema.
+            - La descarga automática de MariaDB requiere conexión a Internet y puede solicitar permisos de administrador.

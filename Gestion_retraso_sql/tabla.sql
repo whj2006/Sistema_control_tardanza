@@ -12,10 +12,10 @@ CREATE TABLE IF NOT EXISTS configuracion_horarios (
     id              INT          PRIMARY KEY DEFAULT 1,
     hora_entrada    VARCHAR(5)   NOT NULL DEFAULT '08:00',
     CHECK (id = 1)  -- Solo una fila
-);
+) ENGINE=InnoDB;
 
 
-CREATE TABLE usuario (
+CREATE TABLE IF NOT EXISTS usuario (
     id             INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     username       VARCHAR(50)  NOT NULL UNIQUE,
     password       VARCHAR(255) NOT NULL,
@@ -26,17 +26,17 @@ CREATE TABLE usuario (
     fecha_creacion DATETIME     DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
-CREATE TABLE destinatario_correo (
+CREATE TABLE IF NOT EXISTS destinatario_correo (
     id     INT AUTO_INCREMENT PRIMARY KEY,
     correo VARCHAR(255) NOT NULL UNIQUE
-);
+) ENGINE=InnoDB;
 
-CREATE TABLE curso (
+CREATE TABLE IF NOT EXISTS curso (
     id     INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50)  NOT NULL UNIQUE
 ) ENGINE=InnoDB;
 
-CREATE TABLE alumno (
+CREATE TABLE IF NOT EXISTS alumno (
     nia            CHAR(8)      PRIMARY KEY,
     nombre         VARCHAR(50)  NOT NULL,
     apellido1      VARCHAR(100) NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE alumno (
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
-CREATE TABLE retraso (
+CREATE TABLE IF NOT EXISTS retraso (
     id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nia           CHAR(8)      NOT NULL,
     fecha_hora    DATETIME     NOT NULL,
@@ -65,12 +65,11 @@ CREATE TABLE retraso (
         FOREIGN KEY (nia)
         REFERENCES alumno(nia)
         ON UPDATE CASCADE
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+    KEY idx_retraso_nia_fecha (nia, fecha_hora)
 ) ENGINE=InnoDB;
 
-CREATE INDEX idx_retraso_nia_fecha ON retraso (nia, fecha_hora);
-
-CREATE TABLE correo (
+CREATE TABLE IF NOT EXISTS correo (
     id             INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     id_retraso     INT UNSIGNED  NOT NULL,
     email_destino  VARCHAR(100)  NOT NULL,
@@ -85,12 +84,11 @@ CREATE TABLE correo (
         FOREIGN KEY (id_retraso)
         REFERENCES retraso(id)
         ON UPDATE CASCADE
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+    KEY idx_correo_estado (estado)
 ) ENGINE=InnoDB;
 
-CREATE INDEX idx_correo_estado ON correo (estado);
-
-CREATE TABLE configuracion (
+CREATE TABLE IF NOT EXISTS configuracion (
     id               INT UNSIGNED   PRIMARY KEY DEFAULT 1,
     smtp_host        VARCHAR(100)   NOT NULL,
     smtp_puerto      INT UNSIGNED   NOT NULL,
