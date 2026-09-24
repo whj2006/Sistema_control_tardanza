@@ -1,5 +1,6 @@
 package com.instituto.tardanzas.ui.panels;
 
+import com.instituto.tardanzas.config.ConfigDB;
 import com.instituto.tardanzas.dao.ConfiguracionHorariosDAO;
 import com.instituto.tardanzas.model.ConfiguracionHorarios;
 import com.instituto.tardanzas.ui.util.UIUtils;
@@ -13,9 +14,10 @@ public class AjustesPanel extends JPanel {
     private final ConfiguracionHorariosDAO dao =
             new ConfiguracionHorariosDAO();
 
-    private JSpinner spinEntradaH;
-    private JSpinner spinEntradaM;
-    private JLabel   lblEstado;
+    private JSpinner   spinEntradaH;
+    private JSpinner   spinEntradaM;
+    private JTextField tfNombreCentro;
+    private JLabel     lblEstado;
 
     // ══════════════════════════════════════════════════════════════════════
     // CONSTRUCTOR
@@ -55,7 +57,11 @@ public class AjustesPanel extends JPanel {
 
         // ── Descripción ───────────────────────────────────────────────────
         JTextArea txtDesc = new JTextArea(
-            "Configura el horario del sistema:\n\n"
+            "Configura los datos del centro y el\n"
+          + "horario del sistema:\n\n"
+          + "Nombre del centro:\n"
+          + "Se muestra en la barra superior y en\n"
+          + "los correos enviados a las familias.\n\n"
           + "Hora de entrada:\n"
           + "Determina desde que hora se considera\n"
           + "que un alumno llega tarde y cuantos\n"
@@ -73,6 +79,14 @@ public class AjustesPanel extends JPanel {
 
         JSeparator sep2 = separador();
 
+        // ── Fila: Nombre del centro ───────────────────────────────────────
+        tfNombreCentro = new JTextField();
+        JPanel filaCentro = crearFilaTexto(
+                "Nombre del centro:",
+                tfNombreCentro);
+
+        JSeparator sep3 = separador();
+
         // ── Fila: Hora de entrada ─────────────────────────────────────────
         spinEntradaH = crearSpinner(0, 23);
         spinEntradaM = crearSpinner(0, 59);
@@ -82,7 +96,7 @@ public class AjustesPanel extends JPanel {
                 spinEntradaH,
                 spinEntradaM);
 
-        JSeparator sep3 = separador();
+        JSeparator sep4 = separador();
 
         // ── Botón guardar ─────────────────────────────────────────────────
         JButton btnGuardar = UIUtils.crearBoton(
@@ -110,9 +124,13 @@ public class AjustesPanel extends JPanel {
         tarjeta.add(Box.createVerticalStrut(18));
         tarjeta.add(sep2);
         tarjeta.add(Box.createVerticalStrut(18));
+        tarjeta.add(filaCentro);
+        tarjeta.add(Box.createVerticalStrut(18));
+        tarjeta.add(sep3);
+        tarjeta.add(Box.createVerticalStrut(18));
         tarjeta.add(filaEntrada);
         tarjeta.add(Box.createVerticalStrut(22));
-        tarjeta.add(sep3);
+        tarjeta.add(sep4);
         tarjeta.add(Box.createVerticalStrut(18));
         tarjeta.add(btnGuardar);
         tarjeta.add(Box.createVerticalStrut(10));
@@ -135,6 +153,39 @@ public class AjustesPanel extends JPanel {
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         add(scroll, BorderLayout.CENTER);
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // FILA DE TEXTO
+    // ══════════════════════════════════════════════════════════════════════
+
+    private JPanel crearFilaTexto(String etiqueta,
+                                  JTextField campo) {
+        JPanel fila = new JPanel();
+        fila.setOpaque(false);
+        fila.setLayout(
+                new BoxLayout(fila, BoxLayout.X_AXIS));
+        fila.setAlignmentX(Component.LEFT_ALIGNMENT);
+        fila.setMaximumSize(
+                new Dimension(Integer.MAX_VALUE, 50));
+
+        JLabel lbl = new JLabel(etiqueta);
+        lbl.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lbl.setForeground(UIUtils.COLOR_PRIMARIO);
+        lbl.setPreferredSize(new Dimension(240, 36));
+        lbl.setMinimumSize(new Dimension(240, 36));
+        lbl.setMaximumSize(new Dimension(240, 36));
+
+        campo.setFont(
+                new Font("Segoe UI", Font.PLAIN, 13));
+        campo.setPreferredSize(new Dimension(220, 36));
+        campo.setMaximumSize(new Dimension(220, 36));
+
+        fila.add(lbl);
+        fila.add(Box.createHorizontalStrut(10));
+        fila.add(campo);
+
+        return fila;
     }
 
     // ══════════════════════════════════════════════════════════════════════
@@ -221,6 +272,8 @@ public class AjustesPanel extends JPanel {
                     ConfiguracionHorarios h = get();
                     aplicarHora(h.getHoraEntrada(),
                             spinEntradaH, spinEntradaM);
+                    tfNombreCentro.setText(ConfigDB.cargar()
+                            .getProperty("centro.nombre", ""));
                     mostrarEstado("Ajustes cargados.", true);
                 } catch (Exception e) {
                     mostrarEstado(
@@ -241,6 +294,8 @@ public class AjustesPanel extends JPanel {
         int entM = (int) spinEntradaM.getValue();
         String horaEntrada =
                 String.format("%02d:%02d", entH, entM);
+        String nombreCentro =
+                tfNombreCentro.getText().trim();
 
         SwingWorker<Void, Void> w = new SwingWorker<>() {
             @Override
@@ -248,6 +303,12 @@ public class AjustesPanel extends JPanel {
                     throws Exception {
                 dao.guardar(new ConfiguracionHorarios(
                         horaEntrada));
+
+                java.util.Properties props =
+                        ConfigDB.cargar();
+                props.setProperty("centro.nombre",
+                        nombreCentro);
+                ConfigDB.guardar(props);
                 return null;
             }
             @Override
@@ -261,6 +322,8 @@ public class AjustesPanel extends JPanel {
                     JOptionPane.showMessageDialog(
                         AjustesPanel.this,
                         "Ajustes guardados.\n\n"
+                        + "Nombre del centro: "
+                        + nombreCentro + "\n"
                         + "Hora de entrada: "
                         + horaEntrada,
                         "Guardado",
