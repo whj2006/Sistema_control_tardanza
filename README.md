@@ -65,7 +65,7 @@ La preparación del esquema **no borra los registros existentes**. Las tablas se
 
 ### Nombre del centro
 
-El nombre del centro se muestra en la barra superior de la aplicación y en los correos enviados a las familias. Se puede cambiar desde **Ajustes → Nombre del centro** y queda guardado localmente (no se sube a ningún servidor). El valor por defecto es `IES [Nombre del centro]`.
+El nombre del centro se muestra en la barra superior de la aplicación y en los correos enviados a las familias. Se puede cambiar desde **Ajustes → Nombre del centro** y queda guardado localmente (no se sube a ningún servidor). El valor por defecto es `[Nombre del centro]`.
 
 ### Perfiles de acceso
 
