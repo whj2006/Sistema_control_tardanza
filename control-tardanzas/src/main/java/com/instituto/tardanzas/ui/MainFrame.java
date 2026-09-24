@@ -173,7 +173,7 @@ public class MainFrame extends JFrame {
         JLabel lblInstituto =
                 new JLabel(ConfigDB.cargar().getProperty(
                         "centro.nombre",
-                        "IES [Nombre del centro]"));
+                        "[Nombre del centro]"));
         lblInstituto.setFont(
                 new Font("Segoe UI", Font.BOLD, 18));
         lblInstituto.setForeground(Color.WHITE);
