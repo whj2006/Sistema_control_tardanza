@@ -1,5 +1,6 @@
 package com.instituto.tardanzas.ui;
 
+import com.instituto.tardanzas.config.ConfigDB;
 import com.instituto.tardanzas.dao.UsuarioDAO;
 import com.instituto.tardanzas.model.Usuario;
 import com.instituto.tardanzas.service.EmailService;
@@ -18,7 +19,6 @@ import com.instituto.tardanzas.ui.util.UIUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -160,26 +160,6 @@ public class MainFrame extends JFrame {
                 BorderFactory.createEmptyBorder(
                         0, 15, 0, 20));
 
-        // ── Logos ─────────────────────────────────────────────────────────
-        JPanel izquierda = new JPanel();
-        izquierda.setOpaque(false);
-        izquierda.setLayout(
-                new BoxLayout(izquierda,
-                        BoxLayout.X_AXIS));
-        int altoLogos = 62;
-        izquierda.add(crearLogo(
-                "/images/logo1.png", 228, 116,
-                altoLogos));
-        izquierda.add(Box.createHorizontalStrut(10));
-        izquierda.add(crearLogo(
-                "/images/logo2.png", 97, 96,
-                altoLogos));
-        izquierda.add(Box.createHorizontalStrut(10));
-        izquierda.add(crearLogo(
-                "/images/logo3.png", 140, 98,
-                altoLogos));
-        barra.add(izquierda, BorderLayout.WEST);
-
         // ── Centro ────────────────────────────────────────────────────────
         JPanel centroPanel =
                 new JPanel(new GridBagLayout());
@@ -191,7 +171,9 @@ public class MainFrame extends JFrame {
                 new BoxLayout(textos, BoxLayout.Y_AXIS));
 
         JLabel lblInstituto =
-                new JLabel("Control de Tardanzas");
+                new JLabel(ConfigDB.cargar().getProperty(
+                        "centro.nombre",
+                        "Control de Tardanzas"));
         lblInstituto.setFont(
                 new Font("Segoe UI", Font.BOLD, 18));
         lblInstituto.setForeground(Color.WHITE);
@@ -259,24 +241,6 @@ public class MainFrame extends JFrame {
                 e -> actualizarFechaHora()).start();
 
         return barra;
-    }
-
-    private JLabel crearLogo(String ruta,
-                             int wOrig, int hOrig,
-                             int altoDeseado) {
-        URL url = getClass().getResource(ruta);
-        if (url != null) {
-            ImageIcon icono = new ImageIcon(url);
-            int anchoCalc = (int) Math.round(
-                    altoDeseado
-                    * (double) wOrig / hOrig);
-            Image img = icono.getImage()
-                    .getScaledInstance(
-                            anchoCalc, altoDeseado,
-                            Image.SCALE_SMOOTH);
-            return new JLabel(new ImageIcon(img));
-        }
-        return new JLabel();
     }
 
     private void actualizarFechaHora() {
