@@ -1,5 +1,6 @@
 package com.instituto.tardanzas.service;
 
+import com.instituto.tardanzas.config.ConfigDB;
 import com.instituto.tardanzas.dao.ConfiguracionDAO;
 import com.instituto.tardanzas.dao.CorreoDAO;
 import com.instituto.tardanzas.model.Configuracion;
@@ -52,6 +53,14 @@ public class EmailService {
     public void detener() {
         if (reintentosScheduler != null)
             reintentosScheduler.shutdownNow();
+    }
+
+    // ── Nombre del centro (configurable) ──────────────────────────────────
+
+    private String nombreCentro() {
+        return ConfigDB.cargar().getProperty(
+                "centro.nombre",
+                "Control de Tardanzas");
     }
 
     // ── Envío inmediato al fichar ─────────────────────────────────────────
@@ -128,7 +137,7 @@ public class EmailService {
             + "background:#fff;border-radius:8px;padding:30px;"
             + "border-top:4px solid #781414'>"
             + "<h2 style='color:#781414'>"
-            + "Control de Tardanzas</h2>"
+            + nombreCentro() + "</h2>"
             + "<h3 style='color:#2c3e50'>Informe de Retrasos</h3>"
             + "<p>Adjunto encontrará el informe solicitado.</p>"
             + "<p style='background:#f8f9fa;padding:10px;"
@@ -264,7 +273,7 @@ public class EmailService {
              + "background:#fff;border-radius:8px;"
              + "padding:30px;border-top:4px solid #781414'>"
              + "<h2 style='color:#781414;margin-bottom:20px'>"
-             + "Control de Tardanzas</h2>"
+             + nombreCentro() + "</h2>"
              + "<h3 style='color:#2c3e50;margin-bottom:25px'>"
              + correo.getAsunto() + "</h3>"
              + "<p>Benvolgut/da pare/mare/tutor/a legal,</p>"
@@ -277,7 +286,8 @@ public class EmailService {
              + "Quedem a la vostra disposició per a "
              + "qualsevol aclariment.</p>"
              + "<p>Atentament,<br>"
-             + "<b>CONTROL DE TARDANZAS.</b></p>"
+             + "<b>" + nombreCentro().toUpperCase()
+             + ".</b></p>"
              + "<hr style='border:none;border-top:2px "
              + "solid #781414;margin:25px 0'>"
              + "<p>Estimado/a padre/madre/tutor/a legal,</p>"
@@ -290,7 +300,8 @@ public class EmailService {
              + "Quedamos a su disposición para "
              + "cualquier aclaración.</p>"
              + "<p>Atentamente,<br>"
-             + "<b>CONTROL DE TARDANZAS.</b></p>"
+             + "<b>" + nombreCentro().toUpperCase()
+             + ".</b></p>"
              + "<hr style='border:none;border-top:1px "
              + "solid #eee;margin:20px 0'>"
              + "<p style='font-size:11px;color:#999;"
