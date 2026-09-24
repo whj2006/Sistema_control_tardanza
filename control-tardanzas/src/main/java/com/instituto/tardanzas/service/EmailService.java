@@ -60,7 +60,7 @@ public class EmailService {
     private String nombreCentro() {
         return ConfigDB.cargar().getProperty(
                 "centro.nombre",
-                "IES [Nombre del centro]");
+                "[Nombre del centro]");
     }
 
     // ── Envío inmediato al fichar ─────────────────────────────────────────
