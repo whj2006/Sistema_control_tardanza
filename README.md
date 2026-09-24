@@ -4,12 +4,7 @@
 
 **Aplicación de escritorio para registrar los retrasos del alumnado y gestionar los avisos a sus familias.**
 
-Control de Tardanzas
-
 [![Última versión](https://img.shields.io/github/v/release/whj2006/Sistema_control_tardanza?display_name=tag&label=versi%C3%B3n)](https://github.com/whj2006/Sistema_control_tardanza/releases/latest)
-[![Windows 10/11](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?logo=windows&logoColor=white)](#instalación-en-windows)
-[![Java 17](https://img.shields.io/badge/Java-17-ED8B00?logo=openjdk&logoColor=white)](#compilar-desde-el-código)
-[![Build de Windows](https://github.com/whj2006/Sistema_control_tardanza/actions/workflows/build-windows.yml/badge.svg)](https://github.com/whj2006/Sistema_control_tardanza/actions/workflows/build-windows.yml)
 
 ---
 
@@ -19,13 +14,9 @@ Control de Tardanzas
   <img alt="Descargar ControlTardanzas-Setup.exe" src="https://img.shields.io/badge/Descargar_instalador-ControlTardanzas--Setup.exe-962626?style=for-the-badge&logo=windows&logoColor=white">
 </a>
 
-<br>
-
-[Ver versiones y archivos publicados](https://github.com/whj2006/Sistema_control_tardanza/releases)
-
 </div>
 
-> El botón descarga el instalador de la **última versión publicada**. Si las mejoras de esta rama aún no se han publicado, se descargará la release anterior; al publicar una etiqueta `v*`, GitHub Actions generará y adjuntará el nuevo `.exe` automáticamente.
+> El botón descarga el instalador de la **última versión publicada**. Al publicar una etiqueta `v*`, GitHub Actions genera y adjunta el nuevo `.exe` automáticamente.
 
 ## Resumen
 
@@ -68,9 +59,13 @@ La preparación del esquema **no borra los registros existentes**. Las tablas se
 | **Importación** | Importa alumnado desde archivos Excel. |
 | **Exportación** | Genera informes de retrasos para su consulta o envío. |
 | **Correos** | Consulta el estado de los avisos y gestiona los envíos pendientes o fallidos. |
-| **Configuración** | Ajusta el horario de entrada y los datos SMTP del centro. |
+| **Configuración** | Ajusta el horario de entrada, el nombre del centro y los datos SMTP. |
 | **Usuarios y permisos** | Administra cuentas y acceso a los distintos módulos. |
 | **Mantenimiento** | Permite reiniciar los datos de retrasos desde la propia aplicación. |
+
+### Nombre del centro
+
+El nombre del centro se muestra en la barra superior de la aplicación y en los correos enviados a las familias. Se puede cambiar desde **Ajustes → Nombre del centro** y queda guardado localmente (no se sube a ningún servidor). El valor por defecto es `IES [Nombre del centro]`.
 
 ### Perfiles de acceso
 
