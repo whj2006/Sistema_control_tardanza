@@ -2,7 +2,7 @@
 
 #define MyAppName "Control de Tardanzas"
 #define MyAppExe "ControlTardanzas.exe"
-#define MyAppPublisher "Control de Tardanzas"
+#define MyAppPublisher "Control Tardanzas"
 #define MyAppURL "https://github.com/whj2006/Sistema_control_tardanza"
 #define AppImageDir "..\control-tardanzas\target\windows-package\app-image\ControlTardanzas"
 
