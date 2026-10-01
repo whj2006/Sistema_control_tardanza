@@ -1,33 +1,8 @@
 -- ================================================
--- PROCEDIMIENTOS (idempotentes)
--- ================================================
-
-DELIMITER ;
-DROP PROCEDURE IF EXISTS sp_fichar_retraso_automatico;
-DROP PROCEDURE IF EXISTS sp_historial_por_alumno;
-DROP PROCEDURE IF EXISTS sp_importar_actualizar_alumno;
-DROP PROCEDURE IF EXISTS sp_crear_curso_si_no_existe;
-DROP PROCEDURE IF EXISTS sp_editar_alumno;
-DROP PROCEDURE IF EXISTS sp_editar_curso;
-DROP PROCEDURE IF EXISTS sp_listar_alumnos_curso;
-DROP PROCEDURE IF EXISTS sp_ver_estado_correos;
-DROP PROCEDURE IF EXISTS sp_guardar_configuracion;
-DROP PROCEDURE IF EXISTS sp_obtener_configuracion;
-DROP PROCEDURE IF EXISTS sp_autenticar_usuario;
-DROP PROCEDURE IF EXISTS sp_contar_usuarios;
-DROP PROCEDURE IF EXISTS sp_listar_usuarios;
-DROP PROCEDURE IF EXISTS sp_crear_usuario;
-DROP PROCEDURE IF EXISTS sp_editar_usuario;
-DROP PROCEDURE IF EXISTS sp_cambiar_password;
-DROP PROCEDURE IF EXISTS sp_resetear_password;
-DROP PROCEDURE IF EXISTS sp_eliminar_usuario;
-
-DELIMITER //
-
--- ================================================
 -- PROCEDIMIENTOS
 -- ================================================
 
+DELIMITER //
 
 -- ── A. Fichar retraso automatico ─────────────────────────────────────────
 CREATE PROCEDURE sp_fichar_retraso_automatico(
@@ -282,7 +257,7 @@ BEGIN
     SELECT id, username, rol
     FROM usuario
     WHERE username = p_username
-      AND password = p_password
+      AND password = SHA2(p_password, 256)
       AND activo   = 1;
 END //
 
@@ -313,7 +288,7 @@ BEGIN
     END IF;
 
     INSERT INTO usuario (username, password, rol)
-    VALUES (p_username, p_password, p_rol);
+    VALUES (p_username, SHA2(p_password, 256), p_rol);
 END //
 
 -- ── O. Editar usuario ─────────────────────────────────────────────────────
@@ -353,14 +328,14 @@ CREATE PROCEDURE sp_cambiar_password(
 BEGIN
     IF NOT EXISTS (
         SELECT 1 FROM usuario
-        WHERE id = p_id AND password = p_password_actual
+        WHERE id = p_id AND password = SHA2(p_password_actual, 256)
     ) THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'La contrasena actual no es correcta.';
     END IF;
 
     UPDATE usuario
-    SET password = p_password_nueva
+    SET password = SHA2(p_password_nueva, 256)
     WHERE id = p_id;
 END //
 
@@ -376,7 +351,7 @@ BEGIN
     END IF;
 
     UPDATE usuario
-    SET password = p_password_nueva
+    SET password = SHA2(p_password_nueva, 256)
     WHERE id = p_id;
 END //
 
