@@ -77,7 +77,7 @@ try {
         '--type', 'app-image',
         '--name', 'ControlTardanzas',
         '--app-version', $version,
-        '--vendor', 'Control de Tardanzas',
+        '--vendor', 'Control Tardanzas',
         '--description', 'Sistema de control de retrasos del alumnado',
         '--input', $inputDirectory,
         '--main-jar', $jarName,
