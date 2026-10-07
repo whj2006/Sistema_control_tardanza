@@ -16,7 +16,7 @@
 
 </div>
 
-> El botón descarga el instalador de la **última versión publicada**. Al publicar una etiqueta `v*`, GitHub Actions genera y adjunta el nuevo `.exe` automáticamente.
+> El botón descarga el instalador de la **última versión publicada**. 
 
 ## Resumen
 
