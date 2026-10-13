@@ -55,7 +55,7 @@ public class EmailService {
             reintentosScheduler.shutdownNow();
     }
 
-    // ── Nombre del centro (configurable) ──────────────────────────────────
+    // ── Nombre del centro (configurable, no hardcodeado) ──────────────────
 
     private String nombreCentro() {
         return ConfigDB.cargar().getProperty(
@@ -78,7 +78,12 @@ public class EmailService {
 
     // ── Procesar pendientes ───────────────────────────────────────────────
 
-    public void procesarPendientes() {
+    /**
+     * Sincronizado para evitar que el hilo de reintentos
+     * y el envío inmediato procesen la misma cola a la vez
+     * (duplicar correos a las familias).
+     */
+    public synchronized void procesarPendientes() {
         try {
             Configuracion cfg = configDAO.obtener();
             if (cfg == null) {
@@ -314,47 +319,246 @@ public class EmailService {
              + "</div></body></html>";
     }
 
-    // ── Traducir errores ──────────────────────────────────────────────────
+    // ── Resultado de conexión ─────────────────────────────────────────────
 
-    private String traducirError(Exception e) {
+    public static class ResultadoConexion {
+        public final boolean ok;
+        public final String  motivo;
+        public final String  detalle;
+
+        private ResultadoConexion(boolean ok,
+                                  String motivo,
+                                  String detalle) {
+            this.ok      = ok;
+            this.motivo  = motivo;
+            this.detalle = detalle;
+        }
+    }
+
+    // ── Analizar el error → motivo claro + detalle del servidor ───────────
+
+    private ResultadoConexion analizarError(Exception e) {
+        // Recoger TODOS los mensajes de la cadena de excepciones
         Throwable causa = e;
         StringBuilder todas = new StringBuilder();
+        StringBuilder raw   = new StringBuilder();
         while (causa != null) {
-            if (causa.getMessage() != null)
-                todas.append(causa.getMessage())
-                     .append(" ");
+            if (causa.getMessage() != null) {
+                todas.append(causa.getMessage()).append(" ");
+                raw.append(causa.getMessage()).append(" | ");
+            }
             causa = causa.getCause();
         }
         String completo = todas.toString().toLowerCase();
+        String mensajeCrudo = raw.toString().trim();
+        if (mensajeCrudo.endsWith("|")) {
+            mensajeCrudo = mensajeCrudo.substring(
+                    0, mensajeCrudo.length() - 1).trim();
+        }
 
-        if (completo.contains("authentication")
-                || completo.contains("credentials")
-                || completo.contains("535")
-                || completo.contains("username"))
-            return "Usuario o contraseña incorrectos.";
-        if (completo.contains("timed out")
-                || completo.contains("timeout"))
-            return "Tiempo agotado conectando con "
-                 + "el servidor SMTP.";
-        if (completo.contains("connection refused"))
-            return "Conexión rechazada por el servidor.";
-        if (completo.contains("ssl")
-                || completo.contains("tls"))
-            return "Error SSL/TLS con el servidor SMTP.";
-        if (completo.contains("invalid address"))
-            return "Dirección de email del destinatario "
-                 + "no válida.";
+        // Detalle crudo del servidor (ej. 535 5.7.8 Username and Password...)
+        String detalle = mensajeCrudo.isEmpty()
+                ? e.getClass().getSimpleName()
+                : (mensajeCrudo.length() > 500
+                        ? mensajeCrudo.substring(0, 500) + "..."
+                        : mensajeCrudo);
 
-        String msg = e.getMessage();
-        if (msg == null)
-            return e.getClass().getSimpleName();
-        return msg.length() > 200
-                ? msg.substring(0, 200) : msg;
+        // Interpretación en lenguaje claro. El orden importa:
+        // primero los casos más específicos, luego los genéricos.
+        String motivo = null;
+
+        // ── Gmail: exige contraseña de aplicación ──
+        if (completo.contains("application-specific password")
+                || completo.contains("application specific password")
+                || (completo.contains("5.7.8")
+                    && completo.contains("password"))) {
+            motivo = "Gmail rechaza la contraseña normal. "
+                   + "Activa la verificacion en 2 pasos en tu "
+                   + "cuenta Google y crea una CONTRASEÑA DE "
+                   + "APLICACION (App Password) para usarla "
+                   + "en este programa.";
+        }
+        // ── Gmail: pide iniciar sesión en el navegador ──
+        else if (completo.contains("please log in via your web browser")
+                || completo.contains("sign in via your web browser")
+                || completo.contains("5.7.9")
+                || (completo.contains("534")
+                    && completo.contains("browser"))) {
+            motivo = "Gmail ha bloqueado este intento de acceso "
+                   + "por seguridad. Entra en tu cuenta de Google "
+                   + "desde el navegador y activa una contraseña "
+                   + "de aplicación.";
+        }
+        // ── Gmail: fallo temporal de autenticación ──
+        else if (completo.contains("5.7.0")
+                && (completo.contains("temporary")
+                    || completo.contains("try again later"))) {
+            motivo = "Gmail está teniendo un fallo temporal de "
+                   + "autenticación. Espera unos minutos y vuelve "
+                   + "a intentarlo (el programa lo reintenta solo).";
+        }
+        // ── Office 365: SMTP AUTH deshabilitado ──
+        else if (completo.contains("smtpclientauthentication is disabled")
+                || completo.contains("5.7.139")) {
+            motivo = "SMTP AUTH está deshabilitado en el tenant "
+                   + "de Office 365. El administrador debe "
+                   + "habilitarlo para este buzón.";
+        }
+        // ── Office 365 / Outlook: cliente no autenticado ──
+        else if (completo.contains("5.7.57")
+                || completo.contains("5.7.54")
+                || completo.contains("client not authenticated")) {
+            motivo = "El servidor (Office 365 / Outlook) no permite "
+                   + "el envío SMTP con estas credenciales. Revisa "
+                   + "que la cuenta tenga SMTP AUTH habilitado o usa "
+                   + "una contraseña de aplicación.";
+        }
+        // ── Cuenta con MFA / verificación en dos pasos ──
+        else if (completo.contains("mfa")
+                || completo.contains("multi-factor")
+                || completo.contains("multi factor")
+                || completo.contains("verification code")) {
+            motivo = "La cuenta tiene MFA (verificación en dos "
+                   + "pasos) activado. Debes usar una contraseña "
+                   + "de aplicación (app password).";
+        }
+        // ── El servidor rechaza la autenticación (código 535 / AUTH) ──
+        else if (completo.contains("535")
+                || completo.contains("auth command")
+                || completo.contains("authentication failed")
+                || completo.contains("authentication unsuccessful")) {
+            motivo = "El servidor rechazó el usuario o la contraseña. "
+                   + "Revisa las credenciales y que la cuenta permita "
+                   + "acceso SMTP (prueba con una contraseña de "
+                   + "aplicación).";
+        }
+        // ── Credenciales genéricas ──
+        else if (completo.contains("credentials")
+                || (completo.contains("username")
+                    && completo.contains("password"))) {
+            motivo = "Usuario o contraseña incorrectos, o "
+                   + "autenticación rechazada por el servidor.";
+        }
+        // ── Relay denegado ──
+        else if (completo.contains("relay")
+                || completo.contains("relaying")) {
+            motivo = "El servidor SMTP no permite el envío (relay) "
+                   + "desde esta dirección. Revisa que el email "
+                   + "remitente pertenezca a la cuenta configurada.";
+        }
+        // ── Remitente rechazado ──
+        else if (completo.contains("5.1.8")
+                || (completo.contains("sender")
+                    && completo.contains("reject"))) {
+            motivo = "El servidor rechaza la dirección del remitente "
+                   + "(email remitente). Usa un correo real y "
+                   + "verificado en ese servidor.";
+        }
+        // ── Destinatario no existe o rechazado ──
+        else if (completo.contains("5.1.1")
+                || completo.contains("recipient address rejected")
+                || completo.contains("user unknown")
+                || completo.contains("no such user")
+                || completo.contains("mailbox unavailable")) {
+            motivo = "El destinatario no existe o fue rechazado por el "
+                   + "servidor. Revisa la dirección de correo del "
+                   + "alumno/familia.";
+        }
+        // ── Dirección del destinatario mal escrita ──
+        else if (completo.contains("5.1.3")
+                || completo.contains("bad recipient address")
+                || completo.contains("invalid recipient")) {
+            motivo = "La dirección del destinatario tiene un formato "
+                   + "no válido.";
+        }
+        // ── Buzón lleno ──
+        else if (completo.contains("5.2.2")
+                || completo.contains("mailbox full")
+                || completo.contains("quota exceeded")) {
+            motivo = "El buzón del destinatario está lleno.";
+        }
+        // ── El servidor pide esperar (saturado / temporal) ──
+        else if (completo.contains("421")
+                || completo.contains("450")
+                || completo.contains("451")
+                || completo.contains("try again later")) {
+            motivo = "El servidor SMTP está saturado o tiene un fallo "
+                   + "temporal. Se reintentará automáticamente en "
+                   + "unos minutos.";
+        }
+        // ── Tiempo agotado ──
+        else if (completo.contains("timed out")
+                || completo.contains("timeout")) {
+            motivo = "Tiempo agotado conectando con el servidor "
+                   + "SMTP. Revisa el puerto y que el firewall "
+                   + "no lo bloquee.";
+        }
+        // ── Conexión rechazada ──
+        else if (completo.contains("connection refused")) {
+            motivo = "Conexión rechazada por el servidor. "
+                   + "Puerto incorrecto o servidor no accesible.";
+        }
+        // ── Certificado SSL no fiable ──
+        else if (completo.contains("pkix")
+                || completo.contains("certification path")
+                || completo.contains("not trusted")
+                || completo.contains("certificate")
+                || completo.contains("unable to find valid")) {
+            motivo = "El certificado SSL del servidor SMTP no es de "
+                   + "confianza. Suele deberse a un certificado "
+                   + "autofirmado o a un firewall/proxy que "
+                   + "intercepta la conexión.";
+        }
+        // ── SSL/TLS genérico ──
+        else if (completo.contains("ssl")
+                || completo.contains("tls")
+                || completo.contains("handshake")
+                || completo.contains("starttls")) {
+            motivo = "Error SSL/TLS con el servidor SMTP. Revisa que "
+                   + "el puerto use STARTTLS (587) o SSL directo "
+                   + "(465) según corresponda.";
+        }
+        // ── Dirección inválida ──
+        else if (completo.contains("invalid address")
+                || completo.contains("invalid addresses")) {
+            motivo = "Dirección de email no válida.";
+        }
+        // ── Host desconocido ──
+        else if (completo.contains("unknown host")
+                || (completo.contains("host")
+                    && completo.contains("unknown"))) {
+            motivo = "No se puede resolver el nombre del "
+                   + "servidor SMTP. Revisa el host.";
+        }
+        // ── No se pudo conectar ──
+        else if (completo.contains("could not connect")
+                || completo.contains("connect failed")
+                || completo.contains("connection reset")) {
+            motivo = "No se puede conectar al servidor SMTP. "
+                   + "Revisa host, puerto y red.";
+        }
+
+        if (motivo == null)
+            motivo = "El servidor no dio más detalles.";
+
+        return new ResultadoConexion(false, motivo, detalle);
+    }
+
+    // ── Traducir errores (texto plano, para guardar en la base de datos) ─
+
+    private String traducirError(Exception e) {
+        ResultadoConexion r = analizarError(e);
+        return "Motivo: " + r.motivo
+             + "\n\nDetalle del servidor: " + r.detalle;
     }
 
     // ── Probar conexión ───────────────────────────────────────────────────
 
-    public String probarConexion(Configuracion cfg) {
+    /**
+     * Prueba la conexión SMTP y devuelve un resultado
+     * estructurado (ok / motivo / detalle) para la interfaz.
+     */
+    public ResultadoConexion probarConexionDetallada(Configuracion cfg) {
         try {
             Session session = crearSesion(cfg);
             try (Transport transport =
@@ -365,9 +569,16 @@ public class EmailService {
                         cfg.getSmtpUsuario(),
                         cfg.getSmtpPassword());
             }
-            return "OK";
+            return new ResultadoConexion(true, null, null);
         } catch (Exception e) {
-            return traducirError(e);
+            return analizarError(e);
         }
+    }
+
+    public String probarConexion(Configuracion cfg) {
+        ResultadoConexion r = probarConexionDetallada(cfg);
+        if (r.ok) return "OK";
+        return "Motivo: " + r.motivo
+             + "\n\nDetalle del servidor: " + r.detalle;
     }
 }

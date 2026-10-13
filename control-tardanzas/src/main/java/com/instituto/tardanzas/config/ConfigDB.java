@@ -14,54 +14,108 @@ import java.util.Properties;
 /**
  * Carga y guarda la conexión a la base de datos en el perfil del usuario.
  * No se escriben credenciales en la carpeta de instalación de la aplicación.
+ *
+ * La contraseña de MySQL se guarda CIFRADA (AES-GCM, misma clave que la
+ * contraseña SMTP, en %APPDATA%\ControlTardanzas\smtp.key), nunca en
+ * texto plano. Una configuración antigua (texto plano) se migra
+ * automáticamente a cifrada la primera vez que se guarda.
  */
 public final class ConfigDB {
 
     private static final String NOMBRE_ARCHIVO = "config.properties";
     private static final String CARPETA_APP = "ControlTardanzas";
 
+    /** Prefijo que indica que db.password está cifrada (AES-GCM). */
+    private static final String PREFIJO_CIFRADO = "ENC:";
+
+    /** True si la configuración cargada ya tenía la contraseña cifrada. */
+    private static boolean passwordCifrada = false;
+
     private ConfigDB() {
     }
 
-    /** Devuelve un Properties vacío si aún no existe una configuración. */
+    /** Indica si la configuración cargada ya guarda db.password cifrada. */
+    public static boolean isPasswordCifrada() {
+        return passwordCifrada;
+    }
+
+    /**
+     * Devuelve un Properties vacío si aún no existe una configuración.
+     * Si la contraseña de MySQL está cifrada (ENC:), la descifra
+     * automáticamente para que el programa pueda usarla.
+     */
     public static Properties cargar() {
         Properties props = new Properties();
+        passwordCifrada = false;
         Path archivo = rutaConfiguracion();
 
         if (Files.isRegularFile(archivo)) {
             try (InputStream input = Files.newInputStream(archivo)) {
                 props.load(input);
-                return props;
             } catch (IOException e) {
                 System.err.println("No se pudo leer " + archivo + ": " + e.getMessage());
             }
+        } else {
+            // Migra configuraciones creadas por versiones anteriores, que las
+            // guardaban en el directorio de trabajo o junto al ejecutable.
+            for (Path antigua : rutasAntiguas()) {
+                if (!antigua.equals(archivo) && Files.isRegularFile(antigua)) {
+                    try (InputStream input = Files.newInputStream(antigua)) {
+                        props.load(input);
+                        guardar(props);
+                        System.out.println("Configuración migrada a " + archivo);
+                        return props;
+                    } catch (IOException e) {
+                        System.err.println("No se pudo migrar " + antigua + ": " + e.getMessage());
+                        return new Properties();
+                    }
+                }
+            }
+            return props;
         }
 
-        // Migra configuraciones creadas por versiones anteriores, que las
-        // guardaban en el directorio de trabajo o junto al ejecutable.
-        for (Path antigua : rutasAntiguas()) {
-            if (!antigua.equals(archivo) && Files.isRegularFile(antigua)) {
-                try (InputStream input = Files.newInputStream(antigua)) {
-                    props.load(input);
-                    guardar(props);
-                    System.out.println("Configuración migrada a " + archivo);
-                    return props;
-                } catch (IOException e) {
-                    System.err.println("No se pudo migrar " + antigua + ": " + e.getMessage());
-                    return new Properties();
-                }
+        // Descifrar la contraseña de MySQL si está cifrada
+        String pass = props.getProperty("db.password");
+        if (pass != null && pass.startsWith(PREFIJO_CIFRADO)) {
+            passwordCifrada = true;
+            try {
+                props.setProperty("db.password",
+                        CryptoUtil.descifrar(
+                                pass.substring(PREFIJO_CIFRADO.length())));
+            } catch (Exception e) {
+                System.err.println(
+                        "[ConfigDB] No se pudo descifrar db.password: "
+                        + e.getMessage());
             }
         }
 
         return props;
     }
 
-    /** Guarda las credenciales en el perfil del usuario actual. */
+    /**
+     * Guarda las credenciales en el perfil del usuario actual.
+     * La contraseña de MySQL se guarda CIFRADA (AES-GCM).
+     */
     public static void guardar(Properties props) throws IOException {
+        Properties aGuardar = new Properties();
+        aGuardar.putAll(props);
+
+        String pass = aGuardar.getProperty("db.password");
+        if (pass != null && !pass.startsWith(PREFIJO_CIFRADO)) {
+            try {
+                aGuardar.setProperty("db.password",
+                        PREFIJO_CIFRADO + CryptoUtil.cifrar(pass));
+            } catch (Exception e) {
+                System.err.println(
+                        "[ConfigDB] No se pudo cifrar db.password: "
+                        + e.getMessage());
+            }
+        }
+
         Path archivo = rutaConfiguracion();
         Files.createDirectories(archivo.getParent());
         try (OutputStream output = Files.newOutputStream(archivo)) {
-            props.store(output, "Control de Tardanzas - configuración local de base de datos");
+            aGuardar.store(output, "Control de Tardanzas - configuración local de base de datos");
         }
 
         // En sistemas POSIX limita el archivo a lectura/escritura del usuario.
